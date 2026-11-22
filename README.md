@@ -34,7 +34,7 @@ Requires Lyrion 8.0 or later.
 
 ## Help
 
-The app's FAQ (English, Russian) covers the plugin and common setup problems:
+The app's FAQ covers the plugin and common setup problems:
 https://irage.org/easysqueezy/faq.html
 
 ## Layout
