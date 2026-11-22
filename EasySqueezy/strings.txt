@@ -1,0 +1,370 @@
+PLUGIN_EASYSQUEEZY
+	EN	EasySqueezy Player
+
+PLUGIN_EASYSQUEEZY_DESC
+	EN	Companion plugin for the EasySqueezy Player Android app: tells the app what this server can do for it, adds this server's log lines to the app's shared diagnostics, and gives EasySqueezy phones their own conversion rules where other plugins take them over.
+	RU	Плагин-компаньон для Android-приложения EasySqueezy Player: сообщает приложению, что умеет этот сервер, добавляет строки журнала сервера в отправляемую диагностику приложения и даёт телефонам с EasySqueezy собственные правила преобразования там, где их перехватывают другие плагины.
+
+PLUGIN_EASYSQUEEZY_VERSION
+	EN	Version
+	RU	Версия
+
+PLUGIN_EASYSQUEEZY_SHARELOG
+	EN	Server log in shared diagnostics
+	RU	Журнал сервера в отправляемой диагностике
+
+PLUGIN_EASYSQUEEZY_SHARELOG_DESC
+	EN	When someone shares the app's diagnostics log (Connection info > Diagnostics log > Share log), the app adds this server's log lines from the same time, so a problem can be followed on both sides. Only lines about that phone's player or about no particular player are included, never lines about other players.
+	RU	Когда журнал диагностики приложения отправляют (Сведения о подключении > Журнал диагностики > Отправить журнал), приложение добавляет строки журнала этого сервера за то же время, чтобы проблему можно было проследить с обеих сторон. Включаются только строки об этом телефоне или ни о каком плеере, но не о других плеерах.
+
+PLUGIN_EASYSQUEEZY_SHARELOG_LABEL
+	EN	Allow the app to include server log lines
+	RU	Разрешить приложению добавлять строки журнала сервера
+
+PLUGIN_EASYSQUEEZY_OWNRULES
+	EN	EasySqueezy's own conversion rules
+	RU	Собственные правила преобразования EasySqueezy
+
+PLUGIN_EASYSQUEEZY_OWNRULES_DESC
+	EN	Plugins such as C-3PO and SqueezeDSP replace Lyrion's general conversion rules with rules for single players, which can leave an EasySqueezy phone without MP3 (nothing plays on mobile data). With this on, each EasySqueezy phone gets Lyrion's standard rules for itself while such a plugin is enabled, and DSD rules (with ffmpeg) when it has none. On phones C-3PO is switched on for (C-3PO's default for every new player), C-3PO keeps processing lossless playback and only EasySqueezy's MP3 rules are added, for mobile data. Takes effect when a phone connects; switching it off takes effect at the next restart of Lyrion.
+	RU	Плагины вроде C-3PO и SqueezeDSP заменяют общие правила преобразования Lyrion правилами для отдельных плееров, и телефон с EasySqueezy может остаться без MP3 (в мобильной сети ничего не играет). Когда это включено, каждый телефон с EasySqueezy получает стандартные правила Lyrion для себя, пока такой плагин включён, и правила для DSD (с ffmpeg), если их у него нет. На телефонах, для которых включён C-3PO (по умолчанию C-3PO включается для каждого нового плеера), C-3PO по-прежнему обрабатывает воспроизведение без потерь, а добавляются только MP3-правила EasySqueezy — для мобильной сети. Действует при подключении телефона; выключение — после перезапуска Lyrion.
+
+PLUGIN_EASYSQUEEZY_OWNRULES_LABEL
+	EN	Give EasySqueezy phones their own conversion rules
+	RU	Давать телефонам с EasySqueezy собственные правила преобразования
+
+PLUGIN_EASYSQUEEZY_PAUSESTAYS
+	EN	Pause stays paused
+	RU	Пауза остаётся паузой
+
+PLUGIN_EASYSQUEEZY_PAUSESTAYS_DESC
+	EN	When a player reconnects, Lyrion resumes it if it was playing when its connection last dropped, even if it has been paused since. Phones reconnect often (a network switch, a dead spot), so music could start by itself, for example in a parked car. With this on, pausing or stopping an EasySqueezy phone clears that, so it stays paused until someone presses Play. Switching the player off and on still works as set under Player > Power.
+	RU	Когда плеер переподключается, Lyrion возобновляет воспроизведение, если плеер играл в момент последнего обрыва связи, даже если с тех пор его поставили на паузу. Телефоны переподключаются часто (смена сети, пропадание связи), поэтому музыка могла заиграть сама, например в припаркованной машине. Когда это включено, пауза или остановка телефона с EasySqueezy сбрасывает это, и он остаётся на паузе, пока кто-нибудь не нажмёт «Воспроизвести». Выключение и включение плеера работают по-прежнему, как задано в «Плеер > Питание».
+
+PLUGIN_EASYSQUEEZY_PAUSESTAYS_LABEL
+	EN	Don't resume a paused EasySqueezy phone when it reconnects
+	RU	Не возобновлять воспроизведение на телефоне с EasySqueezy на паузе при переподключении
+
+PLUGIN_EASYSQUEEZY_LOSSLESS
+	EN	Lossless format (chosen in the app):
+	RU	Формат без потерь (выбран в приложении):
+
+PLUGIN_EASYSQUEEZY_LOSSLESS_PCM
+	EN	PCM
+	RU	PCM
+
+PLUGIN_EASYSQUEEZY_LOSSLESS_ASIS
+	EN	As it is
+	RU	Как есть
+
+PLUGIN_EASYSQUEEZY_LOSSLESS_FLAC16
+	EN	FLAC 16-bit/44.1 kHz
+	RU	FLAC 16 бит/44,1 кГц
+
+PLUGIN_EASYSQUEEZY_LOSSLESS_CHOSEN
+	EN	chosen:
+	RU	выбран:
+
+PLUGIN_EASYSQUEEZY_LOSSLESS_C3PO
+	EN	PCM while C-3PO is switched on for this phone
+	RU	PCM, пока для этого телефона включён C-3PO
+
+PLUGIN_EASYSQUEEZY_RULES
+	EN	Conversion rules for EasySqueezy phones
+	RU	Правила преобразования для телефонов с EasySqueezy
+
+PLUGIN_EASYSQUEEZY_RULES_DESC
+	EN	Which of this server's conversion rules (Settings > Advanced > File Types, custom-convert.conf, plugins) each connected EasySqueezy phone gets: on Wi-Fi (lossless) and with the bitrate limit the app sets on mobile data (MP3). Open the details for each format and for the full list. Reload the page to update it.
+	RU	Какие из правил преобразования этого сервера (Настройки > Дополнительно > Типы файлов, custom-convert.conf, плагины) получает каждый подключённый телефон с EasySqueezy: в Wi-Fi (без потерь) и при ограничении битрейта, которое приложение задаёт в мобильной сети (MP3). Подробности по каждому формату и полный список — в раскрывающихся разделах. Обновите страницу, чтобы увидеть изменения.
+
+PLUGIN_EASYSQUEEZY_RULES_NO_PHONE
+	EN	No EasySqueezy phone is connected right now. These are the rules any EasySqueezy phone would get:
+	RU	Сейчас ни один телефон с EasySqueezy не подключён. Эти правила получил бы любой телефон с EasySqueezy:
+
+PLUGIN_EASYSQUEEZY_RULES_C3PO_ON
+	EN	C-3PO is switched on for this phone: its rules apply on Wi-Fi (lossless), EasySqueezy's own MP3 rules on mobile data.
+	RU	Для этого телефона включён C-3PO: в Wi-Fi (без потерь) действуют его правила, в мобильной сети — собственные MP3-правила EasySqueezy.
+
+PLUGIN_EASYSQUEEZY_RULES_OWN
+	EN	EasySqueezy's own rules:
+	RU	собственных правил EasySqueezy:
+
+PLUGIN_EASYSQUEEZY_RULES_FORMAT
+	EN	Format
+	RU	Формат
+
+PLUGIN_EASYSQUEEZY_RULES_WIFI
+	EN	Wi-Fi (lossless)
+	RU	Wi-Fi (без потерь)
+
+PLUGIN_EASYSQUEEZY_RULES_LIMITED
+	EN	With a bitrate limit (mobile data)
+	RU	С ограничением битрейта (мобильная сеть)
+
+PLUGIN_EASYSQUEEZY_RULES_NONE
+	EN	No usable rule: this format can't play
+	RU	Нет подходящего правила: этот формат не воспроизведётся
+
+PLUGIN_EASYSQUEEZY_RULES_SKIPPED
+	EN	Passed over:
+	RU	Пропущено:
+
+PLUGIN_EASYSQUEEZY_RULES_ALL
+	EN	All rules that apply to this phone, in the order Lyrion checks them
+	RU	Все правила для этого телефона в том порядке, в котором Lyrion их проверяет
+
+PLUGIN_EASYSQUEEZY_RULES_PROFILE
+	EN	Rule
+	RU	Правило
+
+PLUGIN_EASYSQUEEZY_RULES_SOURCE
+	EN	From
+	RU	Откуда
+
+PLUGIN_EASYSQUEEZY_RULES_STATE
+	EN	State
+	RU	Состояние
+
+PLUGIN_EASYSQUEEZY_RULES_COMMAND
+	EN	Command
+	RU	Команда
+
+PLUGIN_EASYSQUEEZY_SRC_EASYSQUEEZY
+	EN	EasySqueezy (own rule)
+	RU	EasySqueezy (собственное правило)
+
+PLUGIN_EASYSQUEEZY_SRC_C3PO
+	EN	C-3PO
+	RU	C-3PO
+
+PLUGIN_EASYSQUEEZY_SRC_SQUEEZEDSP
+	EN	SqueezeDSP
+	RU	SqueezeDSP
+
+PLUGIN_EASYSQUEEZY_SRC_STOCK
+	EN	Lyrion (standard)
+	RU	Lyrion (стандартное)
+
+PLUGIN_EASYSQUEEZY_SRC_STOCKCOPY
+	EN	Lyrion (standard, copied for this player)
+	RU	Lyrion (стандартное, скопировано для этого плеера)
+
+PLUGIN_EASYSQUEEZY_SRC_CUSTOM
+	EN	Custom (custom-convert.conf or a plugin)
+	RU	Своё (custom-convert.conf или плагин)
+
+PLUGIN_EASYSQUEEZY_SRC_PLAYER
+	EN	Rule for this player
+	RU	Правило для этого плеера
+
+PLUGIN_EASYSQUEEZY_STATE_OK
+	EN	usable
+	RU	годно
+
+PLUGIN_EASYSQUEEZY_STATE_OFF
+	EN	switched off in File Types
+	RU	выключено в «Типах файлов»
+
+PLUGIN_EASYSQUEEZY_STATE_NOBIN
+	EN	a program it needs isn't installed
+	RU	не установлена нужная программа
+
+PLUGIN_EASYSQUEEZY_TS
+	EN	Remote access (Tailscale)
+	RU	Удалённый доступ (Tailscale)
+
+PLUGIN_EASYSQUEEZY_TS_DESC
+	EN	Makes this server reachable from the EasySqueezy app away from home, over Tailscale, a free private network between your own devices. The plugin downloads Tailscale's official program (from pkgs.tailscale.com; on FreeBSD the tailscale package from FreeBSD's repository) only when you press Install, checks it and runs it as Lyrion's own user: no administrator rights, nothing changed in this computer's network, and only Lyrion is reachable, not the rest of your home network. Log in with the same Tailscale account as the app. Updates are offered here, never installed without you. A Tailscale you installed yourself is left alone and only reported.
+	RU	Делает этот сервер доступным из приложения EasySqueezy вне дома через Tailscale — бесплатную частную сеть между вашими устройствами. Плагин скачивает официальную программу Tailscale (с pkgs.tailscale.com; на FreeBSD — пакет tailscale из репозитория FreeBSD) только когда вы нажмёте «Установить», проверяет её и запускает от имени пользователя Lyrion: без прав администратора, без изменений в сети этого компьютера, и доступен только Lyrion, а не остальная домашняя сеть. Войдите в ту же учётную запись Tailscale, что и в приложении. Обновления предлагаются здесь и никогда не устанавливаются без вас. Tailscale, установленный вами самостоятельно, не затрагивается — о нём только сообщается.
+
+PLUGIN_EASYSQUEEZY_TS_STATE_NONE
+	EN	Not installed
+	RU	Не установлен
+
+PLUGIN_EASYSQUEEZY_TS_STATE_INSTALLING
+	EN	Installing…
+	RU	Устанавливается…
+
+PLUGIN_EASYSQUEEZY_TS_STATE_STOPPED
+	EN	Installed, switched off
+	RU	Установлен, выключен
+
+PLUGIN_EASYSQUEEZY_TS_STATE_STARTING
+	EN	Starting…
+	RU	Запускается…
+
+PLUGIN_EASYSQUEEZY_TS_STATE_NEEDS_LOGIN
+	EN	Running, not logged in
+	RU	Работает, вход не выполнен
+
+PLUGIN_EASYSQUEEZY_TS_STATE_RUNNING
+	EN	Connected: the app can reach this server away from home
+	RU	Подключено: приложение может связаться с этим сервером вне дома
+
+PLUGIN_EASYSQUEEZY_TS_STATE_SYSTEM
+	EN	Tailscale installed on this system is used (the plugin leaves it alone)
+	RU	Используется Tailscale, установленный в системе (плагин его не трогает)
+
+PLUGIN_EASYSQUEEZY_TS_SYSTEM_NOT_CONNECTED
+	EN	It isn't connected to a tailnet yet: log it in on this computer (for example with "tailscale up"), with the Tailscale account you use in the app.
+	RU	Он ещё не подключён к сети Tailscale: войдите в него на этом компьютере (например, командой «tailscale up») с той учётной записью Tailscale, которую используете в приложении.
+
+PLUGIN_EASYSQUEEZY_TS_STATE_UNSUPPORTED
+	EN	The plugin can't install Tailscale on this system. Install it yourself from tailscale.com/download, then this page shows its address.
+	RU	Плагин не может установить Tailscale на эту систему. Установите его сами с tailscale.com/download — тогда здесь появится его адрес.
+
+PLUGIN_EASYSQUEEZY_ZT
+	EN	Remote access (ZeroTier)
+	RU	Удалённый доступ (ZeroTier)
+
+PLUGIN_EASYSQUEEZY_ZT_DESC
+	EN	If you use ZeroTier rather than Tailscale for the app's remote access: the plugin can't install ZeroTier (it needs administrator rights), but it detects ZeroTier on this computer and tells the app this server's ZeroTier address, so the app reaches it there. Install it from zerotier.com/download, join your network as administrator (for example: zerotier-cli join followed by the network ID) and approve this server in ZeroTier Central. Not needed if your ZeroTier network is bridged into your home network.
+	RU	Если для удалённого доступа приложения вы используете ZeroTier, а не Tailscale: плагин не может установить ZeroTier (нужны права администратора), но находит ZeroTier на этом компьютере и сообщает приложению адрес сервера в ZeroTier, чтобы приложение подключалось к нему там. Установите его с zerotier.com/download, подключитесь к своей сети от имени администратора (например: zerotier-cli join и ID сети) и подтвердите этот сервер в ZeroTier Central. Не нужно, если ваша сеть ZeroTier соединена мостом с домашней сетью.
+
+PLUGIN_EASYSQUEEZY_ZT_NONE
+	EN	ZeroTier isn't installed on this computer.
+	RU	ZeroTier на этом компьютере не установлен.
+
+PLUGIN_EASYSQUEEZY_ZT_STOPPED
+	EN	ZeroTier is installed but not running.
+	RU	ZeroTier установлен, но не запущен.
+
+PLUGIN_EASYSQUEEZY_ZT_RUNNING
+	EN	ZeroTier is running
+	RU	ZeroTier работает
+
+PLUGIN_EASYSQUEEZY_ZT_NODE
+	EN	node
+	RU	узел
+
+PLUGIN_EASYSQUEEZY_ZT_NO_NETWORKS
+	EN	It isn't a member of any network yet.
+	RU	Он ещё не подключён ни к одной сети.
+
+PLUGIN_EASYSQUEEZY_ZT_NETWORK
+	EN	Network
+	RU	Сеть
+
+PLUGIN_EASYSQUEEZY_ZT_NO_ADDRESS
+	EN	no address yet: approve this server in ZeroTier Central (or the network ID is wrong)
+	RU	адреса пока нет: подтвердите этот сервер в ZeroTier Central (или неверен ID сети)
+
+PLUGIN_EASYSQUEEZY_TS_ADDRESS
+	EN	Address:
+	RU	Адрес:
+
+PLUGIN_EASYSQUEEZY_TS_WORKING
+	EN	Working:
+	RU	Выполняется:
+
+PLUGIN_EASYSQUEEZY_TS_OPEN_LINK
+	EN	Open this link, log in with the Tailscale account you use in the app and approve this server:
+	RU	Откройте эту ссылку, войдите в учётную запись Tailscale, которую используете в приложении, и подтвердите этот сервер:
+
+PLUGIN_EASYSQUEEZY_TS_MACHINE_AUTH
+	EN	Logged in; the server waits for approval in the Tailscale admin console (Machines).
+	RU	Вход выполнен; сервер ждёт подтверждения в консоли администратора Tailscale (Machines).
+
+PLUGIN_EASYSQUEEZY_TS_LOGIN
+	EN	Log in to Tailscale
+	RU	Войти в Tailscale
+
+PLUGIN_EASYSQUEEZY_TS_AUTHKEY
+	EN	Or an auth key from the Tailscale admin console (used once, not saved):
+	RU	Или ключ авторизации из консоли администратора Tailscale (используется один раз, не сохраняется):
+
+PLUGIN_EASYSQUEEZY_TS_INSTALL
+	EN	Install Tailscale
+	RU	Установить Tailscale
+
+PLUGIN_EASYSQUEEZY_TS_UNTESTED
+	EN	Not yet tested on this processor type.
+	RU	На этом типе процессора ещё не проверялось.
+
+PLUGIN_EASYSQUEEZY_TS_UPDATE_AVAILABLE
+	EN	A newer Tailscale is available:
+	RU	Доступна более новая версия Tailscale:
+
+PLUGIN_EASYSQUEEZY_TS_UPDATE
+	EN	Update Tailscale
+	RU	Обновить Tailscale
+
+PLUGIN_EASYSQUEEZY_TS_START
+	EN	Switch on
+	RU	Включить
+
+PLUGIN_EASYSQUEEZY_TS_STOP
+	EN	Switch off
+	RU	Выключить
+
+PLUGIN_EASYSQUEEZY_TS_LOGOUT
+	EN	Log out
+	RU	Выйти
+
+PLUGIN_EASYSQUEEZY_TS_REMOVE
+	EN	Remove
+	RU	Удалить
+
+PLUGIN_EASYSQUEEZY_TS_REMOVE_CONFIRM
+	EN	Log out of Tailscale and remove it from this server?
+	RU	Выйти из Tailscale и удалить его с этого сервера?
+
+PLUGIN_EASYSQUEEZY_TS_RUNNING_NOTE
+	EN	Connections over Tailscale reach Lyrion as if from this computer itself, so Lyrion's list of allowed IP addresses doesn't apply to them. Only devices in your own Tailscale network can connect, and Lyrion's password, if set, still applies.
+	RU	Подключения через Tailscale приходят в Lyrion как с этого же компьютера, поэтому список разрешённых IP-адресов Lyrion к ним не применяется. Подключиться могут только устройства вашей сети Tailscale, а пароль Lyrion, если он задан, по-прежнему действует.
+
+PLUGIN_EASYSQUEEZY_RULES_ALL_OK
+	EN	Every format that plays here gets MP3 on mobile data.
+	RU	Каждый воспроизводимый здесь формат получает MP3 в мобильной сети.
+
+PLUGIN_EASYSQUEEZY_RULES_NO_MOBILE
+	EN	No MP3 on mobile data
+	RU	Нет MP3 в мобильной сети
+
+PLUGIN_EASYSQUEEZY_RULES_CANT_PLAY
+	EN	Can't play
+	RU	Не воспроизводятся
+
+PLUGIN_EASYSQUEEZY_RULES_MISSING
+	EN	not installed
+	RU	не установлено
+
+PLUGIN_EASYSQUEEZY_RULES_PER_FORMAT
+	EN	Rule per format
+	RU	Правило для каждого формата
+
+PLUGIN_EASYSQUEEZY_RULES_NONE_SHORT
+	EN	can't play
+	RU	не играет
+
+PLUGIN_EASYSQUEEZY_RULES_HOVER
+	EN	Point at a rule to see its command; (+N): rules Lyrion passed over, with the reason.
+	RU	Наведите указатель на правило, чтобы увидеть команду; (+N): правила, которые Lyrion пропустил, с причиной.
+
+PLUGIN_EASYSQUEEZY_SRCS_EASYSQUEEZY
+	EN	EasySqueezy
+	RU	EasySqueezy
+
+PLUGIN_EASYSQUEEZY_SRCS_C3PO
+	EN	C-3PO
+	RU	C-3PO
+
+PLUGIN_EASYSQUEEZY_SRCS_SQUEEZEDSP
+	EN	SqueezeDSP
+	RU	SqueezeDSP
+
+PLUGIN_EASYSQUEEZY_SRCS_STOCK
+	EN	Lyrion
+	RU	Lyrion
+
+PLUGIN_EASYSQUEEZY_SRCS_STOCKCOPY
+	EN	Lyrion (copy for this player)
+	RU	Lyrion (копия для плеера)
+
+PLUGIN_EASYSQUEEZY_SRCS_CUSTOM
+	EN	custom
+	RU	своё
+
+PLUGIN_EASYSQUEEZY_SRCS_PLAYER
+	EN	player rule
+	RU	правило плеера

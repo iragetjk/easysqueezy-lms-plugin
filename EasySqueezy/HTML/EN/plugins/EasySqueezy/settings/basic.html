@@ -1,0 +1,176 @@
+[% PROCESS settings/header.html %]
+
+	[% WRAPPER setting title="PLUGIN_EASYSQUEEZY_VERSION" desc="" %]
+		<div>[% easysqueezy_version | html %]</div>
+	[% END %]
+
+	[% ts = easysqueezy_ts %]
+	[% WRAPPER setting title="PLUGIN_EASYSQUEEZY_TS" desc="PLUGIN_EASYSQUEEZY_TS_DESC" %]
+		<div><b>[% "PLUGIN_EASYSQUEEZY_TS_STATE_${ts.state}" | string %]</b></div>
+		[% IF ts.state == 'system' && ts.system_state != 'Running' %]
+			<div class="esq-bad">[% "PLUGIN_EASYSQUEEZY_TS_SYSTEM_NOT_CONNECTED" | string %]</div>
+		[% END %]
+		[% IF ts.ip %]
+			<div>[% "PLUGIN_EASYSQUEEZY_TS_ADDRESS" | string %] <b>[% ts.ip | html %]</b>[% IF ts.dns_name %] &middot; [% ts.dns_name | html %][% END %][% IF ts.tailnet %] <span class="esq-dim">([% ts.tailnet | html %])</span>[% END %]</div>
+		[% END %]
+		[% IF ts.version %]
+			<div class="esq-dim">Tailscale [% ts.version | html %] &middot; [% ts.arch | html %]</div>
+		[% ELSIF ts.state == 'system' && ts.running_version %]
+			<div class="esq-dim">Tailscale [% ts.running_version | html %]</div>
+		[% END %]
+		[% IF ts.job %]<div>[% "PLUGIN_EASYSQUEEZY_TS_WORKING" | string %] [% ts.job | html %]</div>[% END %]
+		[% IF ts.action_error || ts.error %]<div class="esq-bad">[% ts.action_error || ts.error | html %]</div>[% END %]
+
+		[% IF ts.state == 'needs_login' %]
+			[% IF ts.machine_auth %]
+				<div>[% "PLUGIN_EASYSQUEEZY_TS_MACHINE_AUTH" | string %]</div>
+			[% ELSIF ts.auth_url %]
+				<div style="margin: 6px 0;">[% "PLUGIN_EASYSQUEEZY_TS_OPEN_LINK" | string %]<br>
+				<a href="[% ts.auth_url | html %]" target="_blank" rel="noopener">[% ts.auth_url | html %]</a></div>
+			[% ELSE %]
+				<div style="margin: 6px 0;">
+					<input type="submit" class="stdclick" name="ts_login" value="[% "PLUGIN_EASYSQUEEZY_TS_LOGIN" | string %]" />
+				</div>
+				<div class="esq-dim">[% "PLUGIN_EASYSQUEEZY_TS_AUTHKEY" | string %]
+					<input type="password" name="ts_authkey" autocomplete="off" size="30" value="" /></div>
+			[% END %]
+		[% END %]
+
+		<div style="margin-top: 6px;">
+		[% IF ts.state == 'none' %]
+			<input type="submit" class="stdclick" name="ts_install" value="[% "PLUGIN_EASYSQUEEZY_TS_INSTALL" | string %]" />
+			[% IF ts.support == 'untested' %]<div class="esq-dim">[% "PLUGIN_EASYSQUEEZY_TS_UNTESTED" | string %]</div>[% END %]
+		[% END %]
+		[% IF ts.update %]
+			<div>[% "PLUGIN_EASYSQUEEZY_TS_UPDATE_AVAILABLE" | string %] [% ts.latest | html %]</div>
+			<input type="submit" class="stdclick" name="ts_update" value="[% "PLUGIN_EASYSQUEEZY_TS_UPDATE" | string %]" />
+		[% END %]
+		[% IF ts.state == 'stopped' %]
+			<input type="submit" class="stdclick" name="ts_start" value="[% "PLUGIN_EASYSQUEEZY_TS_START" | string %]" />
+		[% END %]
+		[% IF ts.state == 'running' || ts.state == 'needs_login' || ts.state == 'starting' %]
+			<input type="submit" class="stdclick" name="ts_stop" value="[% "PLUGIN_EASYSQUEEZY_TS_STOP" | string %]" />
+		[% END %]
+		[% IF ts.state == 'running' %]
+			<input type="submit" class="stdclick" name="ts_logout" value="[% "PLUGIN_EASYSQUEEZY_TS_LOGOUT" | string %]" />
+		[% END %]
+		[% IF ts.version && ts.state != 'installing' && ts.state != 'system' %]
+			<input type="submit" class="stdclick" name="ts_remove" value="[% "PLUGIN_EASYSQUEEZY_TS_REMOVE" | string %]"
+				onclick="return confirm('[% "PLUGIN_EASYSQUEEZY_TS_REMOVE_CONFIRM" | string | html %]');" />
+		[% END %]
+		</div>
+		[% IF ts.state == 'running' %]<div class="esq-dim" style="margin-top: 6px;">[% "PLUGIN_EASYSQUEEZY_TS_RUNNING_NOTE" | string %]</div>[% END %]
+		[% IF ts.state == 'installing' || ts.state == 'starting' || (ts.state == 'needs_login' && !ts.auth_url && ts.job) || (ts.state == 'needs_login' && ts.auth_url) %]
+			<script>setTimeout(function () { location.replace(location.pathname); }, [% IF ts.auth_url %]8000[% ELSE %]3000[% END %]);</script>
+		[% END %]
+	[% END %]
+
+	[% zt = easysqueezy_zt %]
+	[% WRAPPER setting title="PLUGIN_EASYSQUEEZY_ZT" desc="PLUGIN_EASYSQUEEZY_ZT_DESC" %]
+		[% IF !zt.installed %]
+			<div><b>[% "PLUGIN_EASYSQUEEZY_ZT_NONE" | string %]</b></div>
+		[% ELSIF !zt.running %]
+			<div><b>[% "PLUGIN_EASYSQUEEZY_ZT_STOPPED" | string %]</b></div>
+		[% ELSE %]
+			<div><b>[% "PLUGIN_EASYSQUEEZY_ZT_RUNNING" | string %]</b>[% IF zt.node %] <span class="esq-dim">([% "PLUGIN_EASYSQUEEZY_ZT_NODE" | string %] [% zt.node | html %])</span>[% END %]</div>
+			[% IF !zt.networks.size %]<div>[% "PLUGIN_EASYSQUEEZY_ZT_NO_NETWORKS" | string %]</div>[% END %]
+			[% FOREACH n IN zt.networks %]
+				<div>[% "PLUGIN_EASYSQUEEZY_ZT_NETWORK" | string %] <b>[% IF n.id %][% n.id | html %][% ELSE %][% n.dev | html %][% END %]</b>:
+				[% IF n.ips.size %][% n.ips.join(', ') | html %][% ELSE %]<span class="esq-bad">[% "PLUGIN_EASYSQUEEZY_ZT_NO_ADDRESS" | string %]</span>[% END %]</div>
+			[% END %]
+		[% END %]
+	[% END %]
+
+	[% WRAPPER setting title="PLUGIN_EASYSQUEEZY_SHARELOG" desc="PLUGIN_EASYSQUEEZY_SHARELOG_DESC" %]
+		<input type="checkbox" name="pref_shareLog" id="pref_shareLog" value="1" [% IF prefs.pref_shareLog %]checked="checked"[% END %] />
+		<label for="pref_shareLog">[% "PLUGIN_EASYSQUEEZY_SHARELOG_LABEL" | string %]</label>
+	[% END %]
+
+	[% WRAPPER setting title="PLUGIN_EASYSQUEEZY_OWNRULES" desc="PLUGIN_EASYSQUEEZY_OWNRULES_DESC" %]
+		<input type="checkbox" name="pref_ownRules" id="pref_ownRules" value="1" [% IF prefs.pref_ownRules %]checked="checked"[% END %] />
+		<label for="pref_ownRules">[% "PLUGIN_EASYSQUEEZY_OWNRULES_LABEL" | string %]</label>
+	[% END %]
+
+	[% WRAPPER setting title="PLUGIN_EASYSQUEEZY_PAUSESTAYS" desc="PLUGIN_EASYSQUEEZY_PAUSESTAYS_DESC" %]
+		<input type="checkbox" name="pref_pauseStays" id="pref_pauseStays" value="1" [% IF prefs.pref_pauseStays %]checked="checked"[% END %] />
+		<label for="pref_pauseStays">[% "PLUGIN_EASYSQUEEZY_PAUSESTAYS_LABEL" | string %]</label>
+	[% END %]
+
+	<style>
+		.esq-rules { border-collapse: collapse; margin: 4px 0 12px 0; }
+		.esq-rules th, .esq-rules td { text-align: left; vertical-align: top; padding: 3px 10px 3px 0; border-bottom: 1px solid rgba(128,128,128,0.3); }
+		.esq-rules code { font-size: 90%; word-break: break-all; }
+		.esq-src { font-weight: bold; white-space: nowrap; }
+		.esq-bad { color: #c62828; }
+		.esq-dim { opacity: 0.7; font-size: 90%; }
+		.esq-phone { margin: 6px 0 10px 0; }
+		.esq-phone details { margin-top: 2px; }
+		.esq-rules td, .esq-rules th { font-size: 90%; padding: 1px 12px 1px 0; }
+	</style>
+
+	[% BLOCK esqrule %][% IF r.none %]<span class="esq-bad">[% "PLUGIN_EASYSQUEEZY_RULES_NONE_SHORT" | string %]</span>[% ELSE %]<span title="[% r.profile | html %]: [% r.command | html %]">[% r.out | upper | html %] &middot; [% "PLUGIN_EASYSQUEEZY_SRCS_${r.source}" | string %]</span>[% END %][% IF r.skipped.size %] <span class="esq-dim" title="[% FOREACH sk IN r.skipped %][% "PLUGIN_EASYSQUEEZY_RULES_SKIPPED" | string %] [% sk.profile | html %]: [% "PLUGIN_EASYSQUEEZY_STATE_${sk.state}" | string %][% IF sk.missing %] ([% sk.missing | html %])[% END %]&#10;[% END %]">(+[% r.skipped.size %])</span>[% END %][% END %]
+
+	[% WRAPPER setting title="PLUGIN_EASYSQUEEZY_RULES" desc="PLUGIN_EASYSQUEEZY_RULES_DESC" %]
+		[% FOREACH phone IN easysqueezy_rules %]
+			<div class="esq-phone">
+				[% IF phone.id %]
+					<b>[% phone.name | html %]</b> <span class="esq-dim">[% phone.id | html %][% IF phone.own %] &middot; [% "PLUGIN_EASYSQUEEZY_RULES_OWN" | string %] [% phone.own %][% END %]</span>
+					[% IF phone.lossless.size %]
+						<div>[% "PLUGIN_EASYSQUEEZY_LOSSLESS" | string %] <b>[% "PLUGIN_EASYSQUEEZY_LOSSLESS_${phone.lossless.1}" | string %]</b>
+						[% IF phone.lossless.0 != phone.lossless.1 %]<span class="esq-dim">([% "PLUGIN_EASYSQUEEZY_LOSSLESS_CHOSEN" | string %] [% "PLUGIN_EASYSQUEEZY_LOSSLESS_${phone.lossless.0}" | string %]; [% "PLUGIN_EASYSQUEEZY_LOSSLESS_C3PO" | string %])</span>[% END %]</div>
+					[% END %]
+					[% IF phone.c3po %]<div class="esq-dim">[% "PLUGIN_EASYSQUEEZY_RULES_C3PO_ON" | string %]</div>[% END %]
+				[% ELSE %]
+					<i>[% "PLUGIN_EASYSQUEEZY_RULES_NO_PHONE" | string %]</i>
+				[% END %]
+				[% IF !phone.no_mobile.size %]
+					<div>&#10003; [% "PLUGIN_EASYSQUEEZY_RULES_ALL_OK" | string %]</div>
+				[% END %]
+				[% FOREACH g IN phone.no_mobile %]
+					<div class="esq-bad">[% "PLUGIN_EASYSQUEEZY_RULES_NO_MOBILE" | string %][% IF g.missing %] (<b>[% g.missing | html %]</b> [% "PLUGIN_EASYSQUEEZY_RULES_MISSING" | string %])[% END %]: <span class="esq-dim">[% g.names | html %]</span></div>
+				[% END %]
+				[% FOREACH g IN phone.cant_play %]
+					<div class="esq-dim">[% "PLUGIN_EASYSQUEEZY_RULES_CANT_PLAY" | string %][% IF g.missing %] ([% g.missing | html %] [% "PLUGIN_EASYSQUEEZY_RULES_MISSING" | string %])[% END %]: [% g.names | html %]</div>
+				[% END %]
+				<details>
+					<summary>[% "PLUGIN_EASYSQUEEZY_RULES_PER_FORMAT" | string %] ([% phone.formats %])</summary>
+					<table class="esq-rules">
+						<tr>
+							<th>[% "PLUGIN_EASYSQUEEZY_RULES_FORMAT" | string %]</th>
+							<th>[% "PLUGIN_EASYSQUEEZY_RULES_WIFI" | string %]</th>
+							<th>[% "PLUGIN_EASYSQUEEZY_RULES_LIMITED" | string %]</th>
+						</tr>
+						[% FOREACH row IN phone.rows %]
+						<tr>
+							<td>[% row.name | html %]</td>
+							<td>[% PROCESS esqrule r=row.wifi %]</td>
+							<td>[% PROCESS esqrule r=row.limited %]</td>
+						</tr>
+						[% END %]
+					</table>
+					<div class="esq-dim">[% "PLUGIN_EASYSQUEEZY_RULES_HOVER" | string %]</div>
+				</details>
+				<details>
+					<summary>[% "PLUGIN_EASYSQUEEZY_RULES_ALL" | string %] ([% phone.all.size %])</summary>
+					<table class="esq-rules">
+						<tr>
+							<th>[% "PLUGIN_EASYSQUEEZY_RULES_PROFILE" | string %]</th>
+							<th>[% "PLUGIN_EASYSQUEEZY_RULES_SOURCE" | string %]</th>
+							<th>[% "PLUGIN_EASYSQUEEZY_RULES_STATE" | string %]</th>
+							<th>[% "PLUGIN_EASYSQUEEZY_RULES_COMMAND" | string %]</th>
+						</tr>
+						[% FOREACH a IN phone.all %]
+						<tr>
+							<td style="white-space: nowrap;">[% a.profile | html %]</td>
+							<td>[% "PLUGIN_EASYSQUEEZY_SRCS_${a.source}" | string %]</td>
+							<td>[% IF a.state %]<span class="esq-bad">[% "PLUGIN_EASYSQUEEZY_STATE_${a.state}" | string %][% IF a.state == 'NOBIN' && a.missing %]: [% a.missing | html %][% END %]</span>[% ELSE %][% "PLUGIN_EASYSQUEEZY_STATE_OK" | string %][% END %]</td>
+							<td><code>[% a.command | html %]</code></td>
+						</tr>
+						[% END %]
+					</table>
+				</details>
+			</div>
+		[% END %]
+	[% END %]
+
+[% PROCESS settings/footer.html %]

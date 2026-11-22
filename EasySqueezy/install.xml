@@ -1,0 +1,20 @@
+<?xml version='1.0' standalone='yes'?>
+<extensions>
+  <id>34127e06-763e-4824-b038-367d576de2f7</id>
+  <name>PLUGIN_EASYSQUEEZY</name>
+  <module>Plugins::EasySqueezy::Plugin</module>
+  <version>0.14.2</version>
+  <description>PLUGIN_EASYSQUEEZY_DESC</description>
+  <creator>Eradj Tursun-Zade (irage)</creator>
+  <email>irage@irage.org</email>
+  <homepageURL>https://irage.org/easysqueezy/faq.html</homepageURL>
+  <optionsURL>plugins/EasySqueezy/settings/basic.html</optionsURL>
+  <defaultState>enabled</defaultState>
+  <type>2</type>
+  <category>tools</category>
+  <targetApplication>
+    <id>SlimServer</id>
+    <minVersion>8.0</minVersion>
+    <maxVersion>*</maxVersion>
+  </targetApplication>
+</extensions>
