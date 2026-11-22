@@ -86,8 +86,8 @@ PLUGIN_EASYSQUEEZY_RULES_TAKEN
 	RU	не осталось ни одного правила: стандартные правила Lyrion заменены плагином
 
 PLUGIN_EASYSQUEEZY_RULES_C3PO_ON
-	EN	C-3PO is switched on for this phone: its rules apply on Wi-Fi (lossless), EasySqueezy's own MP3 rules on mobile data.
-	RU	Для этого телефона включён C-3PO: в Wi-Fi (без потерь) действуют его правила, в мобильной сети — собственные MP3-правила EasySqueezy.
+	EN	C-3PO is switched on for this phone: its rules apply on Wi-Fi (lossless), EasySqueezy's own MP3 rules on mobile data. Formats C-3PO doesn't handle get EasySqueezy's lossless rules too.
+	RU	Для этого телефона включён C-3PO: в Wi-Fi (без потерь) действуют его правила, в мобильной сети — собственные MP3-правила EasySqueezy. Форматы, которые C-3PO не обрабатывает, получают и правила EasySqueezy без потерь.
 
 PLUGIN_EASYSQUEEZY_RULES_OWN
 	EN	EasySqueezy's own rules:

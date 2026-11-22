@@ -46,6 +46,8 @@ package Plugins::EasySqueezy::Plugin;
 #       running, its node and the networks it's a member of with this server's addresses.
 # 0.14.1: the settings page shows each phone's lossless format (and PCM while C-3PO is on).
 # 0.14.2: licensed under GPL-2.0; published on GitHub (iragetjk/easysqueezy-lms-plugin).
+# 0.14.4: phones C-3PO is switched on for also get the lossless rule for formats C-3PO doesn't
+#       handle (AIFF came as MP3 even on Wi-Fi when its general rules were gone).
 # 0.14.3: with no phone connected, the settings page includes the rules the plugin adds for a
 #       phone when it connects; formats left with no rule at all are listed, not dropped.
 #      The server admin can switch this off on the plugin's settings page.
@@ -358,18 +360,32 @@ sub _addOwnRules {
 	my $table = Slim::Player::TranscodingHelper::Conversions();
 
 	# C-3PO switched on for this phone (its default for every new player): its processing applies
-	# to what it makes (lossless), so only our MP3 rules stay, for mobile data. C-3PO makes no MP3,
-	# and without them the phone would get no MP3 at all.
+	# to what it makes (lossless), so for the formats it handles only our MP3 rules stay, for
+	# mobile data. C-3PO makes no MP3, and without them the phone would get no MP3 at all. A format
+	# C-3PO doesn't handle (not ticked under its Input formats) gets our lossless rule too: its
+	# general rules may be gone (C-3PO and SqueezeDSP replace them), which left it MP3 even on Wi-Fi.
 	my $c3po = _c3poEnabledFor($client);
+	my @lossless = grep { $_ ne 'mp3' } _phoneFormats($id);
+	my $othersHandle = sub {
+		my $in = shift;
+		for my $out (@lossless) {
+			for my $profile ("$in-$out-" . APP_MODEL . "-$id", "$in-$out-*-$id", "$in-$out-" . APP_MODEL . '-*', "$in-$out-*-*") {
+				next unless exists $table->{$profile};
+				next if $ownRules{$id} && $ownRules{$id}->{$profile};
+				return 1 if Slim::Player::TranscodingHelper::checkBin($profile);
+			}
+		}
+		return 0;
+	};
 	if ($c3po) {
-		my @ours = grep { (split /-/, $_)[1] ne 'mp3' } keys %{ $ownRules{$id} || {} };
+		my @ours = grep { my ($in, $out) = split /-/, $_; $out ne 'mp3' && $othersHandle->($in) } keys %{ $ownRules{$id} || {} };
 		for (@ours) {
 			delete $ownRules{$id}->{$_};
 			next unless exists $table->{$_};
 			delete $Slim::Player::TranscodingHelper::commandTable{$_};
 			delete $Slim::Player::TranscodingHelper::capabilities{$_};
 		}
-		$log->warn("EasySqueezy: C-3PO is switched on for $id, removed " . scalar(@ours) . " own lossless conversion rules (MP3 ones stay)") if @ours;
+		$log->warn("EasySqueezy: C-3PO is switched on for $id, removed " . scalar(@ours) . " own lossless conversion rules for formats it handles (MP3 ones stay)") if @ours;
 	}
 
 	my ($stock, $dsd) = _rules();
@@ -380,7 +396,7 @@ sub _addOwnRules {
 	my $add = sub {
 		my ($rule, $general) = @_;
 		my ($in, $out, $caps, $command) = @$rule;
-		return if $c3po && $out ne 'mp3';
+		return if $c3po && $out ne 'mp3' && $othersHandle->($in);
 		my $profile = "$in-$out-" . APP_MODEL . "-$id";
 		return if exists $table->{$profile};
 		# The admin switched the general rule off in File Types: leave it off.
@@ -407,7 +423,7 @@ sub _addOwnRules {
 
 	if (@added) {
 		$ownRules{$id}->{$_} = 1 for @added;
-		$log->warn("EasySqueezy: added " . scalar(@added) . ($c3po ? ' MP3' : '') . " conversion rules for $id" . ($takeover ? ' (' . join(', ', @takeoverNames) . ' enabled)' : ''));
+		$log->warn("EasySqueezy: added " . scalar(@added) . " conversion rules" . ($c3po ? ' (C-3PO on: MP3, and lossless for formats it doesn\'t handle)' : '') . " for $id" . ($takeover ? ' (' . join(', ', @takeoverNames) . ' enabled)' : ''));
 	}
 }
 
