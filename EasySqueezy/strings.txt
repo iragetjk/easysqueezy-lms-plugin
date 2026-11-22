@@ -78,8 +78,12 @@ PLUGIN_EASYSQUEEZY_RULES_DESC
 	RU	Какие из правил преобразования этого сервера (Настройки > Дополнительно > Типы файлов, custom-convert.conf, плагины) получает каждый подключённый телефон с EasySqueezy: в Wi-Fi (без потерь) и при ограничении битрейта, которое приложение задаёт в мобильной сети (MP3). Подробности по каждому формату и полный список — в раскрывающихся разделах. Обновите страницу, чтобы увидеть изменения.
 
 PLUGIN_EASYSQUEEZY_RULES_NO_PHONE
-	EN	No EasySqueezy phone is connected right now. These are the rules any EasySqueezy phone would get:
-	RU	Сейчас ни один телефон с EasySqueezy не подключён. Эти правила получил бы любой телефон с EasySqueezy:
+	EN	No EasySqueezy phone is connected right now. These are the rules an EasySqueezy phone would get, including those this plugin adds for it when it connects (for a phone C-3PO isn't switched on for):
+	RU	Сейчас ни один телефон с EasySqueezy не подключён. Эти правила получил бы телефон с EasySqueezy, включая те, что этот плагин добавляет для него при подключении (для телефона, для которого не включён C-3PO):
+
+PLUGIN_EASYSQUEEZY_RULES_TAKEN
+	EN	no rule left: Lyrion's standard rules were replaced by
+	RU	не осталось ни одного правила: стандартные правила Lyrion заменены плагином
 
 PLUGIN_EASYSQUEEZY_RULES_C3PO_ON
 	EN	C-3PO is switched on for this phone: its rules apply on Wi-Fi (lossless), EasySqueezy's own MP3 rules on mobile data.

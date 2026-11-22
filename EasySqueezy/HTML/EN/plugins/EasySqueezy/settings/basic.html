@@ -127,10 +127,10 @@
 					<div>&#10003; [% "PLUGIN_EASYSQUEEZY_RULES_ALL_OK" | string %]</div>
 				[% END %]
 				[% FOREACH g IN phone.no_mobile %]
-					<div class="esq-bad">[% "PLUGIN_EASYSQUEEZY_RULES_NO_MOBILE" | string %][% IF g.missing %] (<b>[% g.missing | html %]</b> [% "PLUGIN_EASYSQUEEZY_RULES_MISSING" | string %])[% END %]: <span class="esq-dim">[% g.names | html %]</span></div>
+					<div class="esq-bad">[% "PLUGIN_EASYSQUEEZY_RULES_NO_MOBILE" | string %][% IF g.missing %] (<b>[% g.missing | html %]</b> [% "PLUGIN_EASYSQUEEZY_RULES_MISSING" | string %])[% END %][% IF g.taken %] ([% "PLUGIN_EASYSQUEEZY_RULES_TAKEN" | string %] <b>[% phone.takeover | html %]</b>)[% END %]: <span class="esq-dim">[% g.names | html %]</span></div>
 				[% END %]
 				[% FOREACH g IN phone.cant_play %]
-					<div class="esq-dim">[% "PLUGIN_EASYSQUEEZY_RULES_CANT_PLAY" | string %][% IF g.missing %] ([% g.missing | html %] [% "PLUGIN_EASYSQUEEZY_RULES_MISSING" | string %])[% END %]: [% g.names | html %]</div>
+					<div class="[% IF g.taken %]esq-bad[% ELSE %]esq-dim[% END %]">[% "PLUGIN_EASYSQUEEZY_RULES_CANT_PLAY" | string %][% IF g.missing %] ([% g.missing | html %] [% "PLUGIN_EASYSQUEEZY_RULES_MISSING" | string %])[% END %][% IF g.taken %] ([% "PLUGIN_EASYSQUEEZY_RULES_TAKEN" | string %] <b>[% phone.takeover | html %]</b>)[% END %]: [% g.names | html %]</div>
 				[% END %]
 				<details>
 					<summary>[% "PLUGIN_EASYSQUEEZY_RULES_PER_FORMAT" | string %] ([% phone.formats %])</summary>

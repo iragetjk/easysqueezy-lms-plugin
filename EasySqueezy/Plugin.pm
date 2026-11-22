@@ -46,6 +46,8 @@ package Plugins::EasySqueezy::Plugin;
 #       running, its node and the networks it's a member of with this server's addresses.
 # 0.14.1: the settings page shows each phone's lossless format (and PCM while C-3PO is on).
 # 0.14.2: licensed under GPL-2.0; published on GitHub (iragetjk/easysqueezy-lms-plugin).
+# 0.14.3: with no phone connected, the settings page includes the rules the plugin adds for a
+#       phone when it connects; formats left with no rule at all are listed, not dropped.
 #      The server admin can switch this off on the plugin's settings page.
 
 use strict;
@@ -508,6 +510,49 @@ sub _ownRuleCount {
 
 # --- Conversion rules report (settings page) -------------------------------------------------
 
+# With no phone connected, the page shows what a phone would get: Lyrion's rules plus those
+# _addOwnRules would add when it connects (for a phone C-3PO isn't switched on for, with the
+# default lossless format PCM). They're worked out here, never put in Lyrion's table:
+# profile "in-out-easysqueezy-*" => { command, caps }.
+our %preview;
+
+sub _previewRules {
+	my %p;
+	return \%p unless $prefs->get('ownRules');
+	my ($stock, $dsd) = _rules();
+	my $table = Slim::Player::TranscodingHelper::Conversions();
+	my $caps = \%Slim::Player::TranscodingHelper::capabilities;
+	my $put = sub {
+		my ($rule, $general) = @_;
+		my ($in, $out, $capString, $command) = @$rule;
+		my $profile = "$in-$out-" . APP_MODEL . '-*';
+		return if exists $table->{$profile} || exists $p{$profile};
+		return if $general && !Slim::Player::TranscodingHelper::enabledFormat("$in-$out-*-*");
+		my $c = { I => 'noArgs', F => 'noArgs' };
+		if (defined $capString && !exists $caps->{$profile}) {
+			# Lyrion's own parser, on a profile that isn't in its table, then taken back out.
+			Slim::Player::TranscodingHelper::_getCapabilities($profile, $capString);
+			$c = delete $caps->{$profile} || $c;
+		}
+		$p{$profile} = { command => $command, caps => $c };
+	};
+	my @takeover = _takeoverPlugins();    # a list: sort in scalar context returns nothing
+	if (@takeover) {
+		$put->($_, 1) for @$stock;
+	}
+	for my $rule (@$dsd) {
+		$put->($rule, 0) unless _canConvert(undef, $rule->[0], $rule->[1]);
+	}
+	return \%p;
+}
+
+# Lyrion's conversion table, with the previewed rules when there are any.
+sub _table {
+	my $table = Slim::Player::TranscodingHelper::Conversions();
+	return $table unless %preview;
+	return { %$table, map { $_ => $preview{$_}->{command} } keys %preview };
+}
+
 # Input formats in the order the page lists them; others follow alphabetically.
 my @FORMAT_ORDER = qw(flc alc wav aif mp3 aac mp4 ogg ops wma wmal wmap ape mpc wvp dsf dff);
 
@@ -518,6 +563,7 @@ sub _ruleSource {
 	my ($profile, $command) = @_;
 	(my $base = $profile) =~ s/-\d+$//;
 	my ($in, $out, $type, $id) = split /-/, $base;
+	return 'EASYSQUEEZY' if $preview{$base};
 	return 'EASYSQUEEZY' if $id ne '*' && (($ownRules{$id} && $ownRules{$id}->{$base}) || ($losslessRules{$id} && $losslessRules{$id}->{$base}));
 	return 'C3PO' if $command =~ /C-?3PO/i;
 	return 'SQUEEZEDSP' if $command =~ /SqueezeDSP/i;
@@ -540,6 +586,9 @@ sub _ruleSource {
 # needs isn't found), or '' when usable.
 sub _ruleState {
 	my $profile = shift;
+	if (my $p = $preview{$profile}) {
+		return _missingBins($p->{command}) ? 'NOBIN' : '';
+	}
 	return '' if Slim::Player::TranscodingHelper::checkBin($profile);
 	return Slim::Player::TranscodingHelper::enabledFormat($profile) ? 'NOBIN' : 'OFF';
 }
@@ -592,7 +641,7 @@ sub _pickRule {
 	# $only: see _profilesFor; $fileOnly: the rule must read a file (F) or its contents (I),
 	# not a remote URL only (a download of a song file).
 	my ($in, $id, $limit, $only, $fileOnly) = @_;
-	my $table = Slim::Player::TranscodingHelper::Conversions();
+	my $table = _table();
 	my $caps  = \%Slim::Player::TranscodingHelper::capabilities;
 	my (@skipped, $backup);
 
@@ -604,7 +653,7 @@ sub _pickRule {
 				push @skipped, { profile => $profile, state => $state, source => _ruleSource($profile, $table->{$profile}), missing => _missingBins($table->{$profile}) };
 				next PROFILE;
 			}
-			my $c = $caps->{$profile} || {};
+			my $c = $caps->{$profile} || ($preview{$profile} && $preview{$profile}->{caps}) || {};
 			next unless $c->{I} || $c->{F} || (!$fileOnly && $c->{R});
 			my $rule = { profile => $profile, command => $table->{$profile}, source => _ruleSource($profile, $table->{$profile}), out => (split /-/, $profile)[1] };
 			if ($limit && !$c->{B}) {
@@ -628,8 +677,8 @@ sub _formatName {
 # phone), the rule Lyrion uses for each input format on Wi-Fi and with a bitrate limit, and all
 # rules that apply to it in Lyrion's lookup order.
 sub ruleReport {
-	_rules();
-	my $table = Slim::Player::TranscodingHelper::Conversions();
+	my ($stock) = _rules();
+	my @takeoverNames = _takeoverPlugins();
 	my @phones = sort { lc($a->name) cmp lc($b->name) } grep { $_->model eq APP_MODEL } Slim::Player::Client::clients();
 	my @targets = @phones ? map { { name => $_->name, id => lc($_->id), client => $_ } } @phones : ({ name => '', id => '' });
 
@@ -639,8 +688,12 @@ sub ruleReport {
 	my @report;
 	for my $t (@targets) {
 		my $id = $t->{id};
-		# The input formats that have any rule for this phone.
-		my %inputs;
+		# No phone connected: include the rules the plugin adds for one when it connects.
+		local %preview = $id ? () : %{ _previewRules() };
+		my $table = _table();
+		# The input formats that have any rule for this phone, and those Lyrion's standard rules
+		# cover: a plugin that took over the general rules may have left a format with none.
+		my %inputs = map { $_->[0] => 1 } @$stock;
 		for my $profile (keys %$table) {
 			my ($in, $out, $type, $pid) = split /-/, $profile;
 			next unless _appOutput($out);
@@ -684,14 +737,24 @@ sub ruleReport {
 			my @common = grep { my $p = $_; !grep { !$_->{$p} } @sets } keys %{ $sets[0] };
 			return join(', ', sort @common);
 		};
+		# A format with no rule at all (none passed over) lost Lyrion's standard ones: "\0", shown
+		# as taken over by the plugins that replace them.
+		my $reason = sub {
+			my $r = shift;
+			return $missingOf->($r) if @{ $r->{skipped} || [] } || !$r->{none};
+			return @takeoverNames ? "\0" : '';
+		};
 		for my $row (@rows) {
 			if ($row->{wifi}->{none}) {
-				push @{ $cantPlay{ $missingOf->($row->{wifi}) } }, $row->{name};
+				push @{ $cantPlay{ $reason->($row->{wifi}) } }, $row->{name};
 			} elsif ($row->{limited}->{none} || ($row->{limited}->{out} // '') eq 'pcm') {
-				push @{ $noMobile{ $missingOf->($row->{limited}) } }, $row->{name};
+				push @{ $noMobile{ $reason->($row->{limited}) } }, $row->{name};
 			}
 		}
-		my $groups = sub { my $h = shift; [ map { { missing => $_, names => join(', ', @{ $h->{$_} }) } } sort keys %$h ] };
+		my $groups = sub {
+			my $h = shift;
+			[ map { { missing => ($_ eq "\0" ? '' : $_), taken => ($_ eq "\0" ? 1 : 0), names => join(', ', @{ $h->{$_} }) } } sort keys %$h ];
+		};
 
 		push @report, {
 			cant_play => $groups->(\%cantPlay),
@@ -701,7 +764,8 @@ sub ruleReport {
 			id       => $id,
 			c3po     => $t->{client} ? _c3poEnabledFor($t->{client}) : 0,
 			lossless => $t->{client} ? [ _losslessChoice($t->{client}) ] : [],
-			own      => $id ? _ownRuleCount($id) : 0,
+			own      => $id ? _ownRuleCount($id) : scalar(keys %preview),
+			takeover => join(', ', @takeoverNames),
 			rows     => \@rows,
 			all      => \@all,
 		};
