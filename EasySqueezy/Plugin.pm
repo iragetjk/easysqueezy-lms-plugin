@@ -46,6 +46,9 @@ package Plugins::EasySqueezy::Plugin;
 #       running, its node and the networks it's a member of with this server's addresses.
 # 0.14.1: the settings page shows each phone's lossless format (and PCM while C-3PO is on).
 # 0.14.2: licensed under GPL-2.0; published on GitHub (iragetjk/easysqueezy-lms-plugin).
+# 0.14.5: MP3 counts as possible only with a rule that can follow a bitrate limit (B): the DSD
+#       MP3 rule is added when the phone has only one that can't (SqueezeDSP's), which made Lyrion
+#       send DSD as PCM on mobile data; flac_mp3/dsd_mp3 report the same.
 # 0.14.4: phones C-3PO is switched on for also get the lossless rule for formats C-3PO doesn't
 #       handle (AIFF came as MP3 even on Wi-Fi when its general rules were gone).
 # 0.14.3: with no phone connected, the settings page includes the rules the plugin adds for a
@@ -239,13 +242,24 @@ sub _canConvert {
 		"$from-$to-*-*",
 	);
 	my $table = Slim::Player::TranscodingHelper::Conversions();
+	my $caps  = \%Slim::Player::TranscodingHelper::capabilities;
 
 	for my $profile (@profiles) {
 		next unless exists $table->{$profile};
 		# As Lyrion does (getConvertCommand2): a rule whose program is missing or that is
 		# disabled sends it on to the next profile, not to the numbered extra rules (-1, -2),
 		# which it only tries when a rule doesn't fit the stream.
-		return 1 if Slim::Player::TranscodingHelper::checkBin($profile);
+		next unless Slim::Player::TranscodingHelper::checkBin($profile);
+		return 1 unless $to eq 'mp3';
+		# MP3 is for mobile data, with a bitrate limit: Lyrion then takes only a rule that can
+		# follow it (B), from this profile or its numbered extra rules, and otherwise falls
+		# back to the first usable rule of any format (usually PCM). A rule without B, such as
+		# SqueezeDSP's, doesn't count.
+		for (my $i = 0; ; $i++) {
+			my $p = $i ? "$profile-$i" : $profile;
+			last unless exists $table->{$p};
+			return 1 if ($caps->{$p} || {})->{B};
+		}
 	}
 
 	return 0;
@@ -418,6 +432,7 @@ sub _addOwnRules {
 	# DSD, when this phone has no usable rule for it.
 	for my $rule (@$dsd) {
 		my ($in, $out) = @$rule;
+		# For MP3, also when the rules it has can't follow a bitrate limit (_canConvert).
 		$add->($rule, 0) unless _canConvert($client, $in, $out);
 	}
 
