@@ -77,6 +77,10 @@ sub _event {
 
 sub _check {
 	my ($client, $stoppedAt) = @_;
+	# Playing (or paused) again: a stop on the way to something new, such as a playlist or album
+	# loaded (Lyrion stops the player, then starts the new queue), not a stop to explain.
+	my $mode = eval { Slim::Player::Source::playmode($client) } // '';
+	return if $mode && $mode ne 'stop';
 	my $s = $state{$client->id} ||= {};
 	my $r = eval { _reason($client, $s, $stoppedAt) };
 	if ($@) {
