@@ -269,8 +269,13 @@ sub _startDaemon {
 	unlink _sock();
 	my $logf = _logf();
 	unlink $logf if -s $logf && -s $logf > LOG_MAX_BYTES;
-	my $cmd = join(' ', map { _q($_) } _bin('tailscaled'), '--tun=userspace-networking',
-		'--statedir=' . _state(), '--socket=' . _sock(), '--port=0');
+	my @cmd = (_bin('tailscaled'), '--tun=userspace-networking', '--statedir=' . _state(), '--socket=' . _sock(), '--port=0');
+	# Lyrion can run with only its effective user switched (piCorePlayer: real user root, effective
+	# tc). tailscaled then sees itself as root and gives other processes of Lyrion's user (the
+	# `tailscale up` for the login) read-only access: "checkprefs access denied". So it starts with
+	# the real user and group set to the effective ones, as an unprivileged process may do.
+	unshift @cmd, $^X, '-e', 'my ($g) = split(" ", $)); $( = $g; $< = $>; exec(@ARGV) or die "exec: $!\n"' if $< != $>;
+	my $cmd = join(' ', map { _q($_) } @cmd);
 	$daemon = Proc::Background->new({ die_upon_destroy => 1 }, '/bin/sh', '-c', "exec $cmd >> " . _q($logf) . ' 2>&1');
 	$log->warn("EasySqueezy Tailscale: started tailscaled " . installedVersion() . ($daemon ? ' (pid ' . $daemon->pid . ')' : ' FAILED'));
 	# Reset the back-off once it has kept running for a while.

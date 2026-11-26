@@ -3,7 +3,7 @@
   <id>34127e06-763e-4824-b038-367d576de2f7</id>
   <name>PLUGIN_EASYSQUEEZY</name>
   <module>Plugins::EasySqueezy::Plugin</module>
-  <version>0.14.6</version>
+  <version>0.14.7</version>
   <description>PLUGIN_EASYSQUEEZY_DESC</description>
   <creator>Eradj Tursun-Zade (irage)</creator>
   <email>irage@irage.org</email>

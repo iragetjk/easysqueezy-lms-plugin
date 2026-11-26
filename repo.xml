@@ -4,7 +4,7 @@
     <title lang="EN">EasySqueezy Player</title>
   </details>
   <plugins>
-    <plugin name="EasySqueezy" version="0.14.6" minTarget="8.0" maxTarget="*">
+    <plugin name="EasySqueezy" version="0.14.7" minTarget="8.0" maxTarget="*">
       <title lang="EN">EasySqueezy Player</title>
       <desc lang="EN">Companion plugin for the EasySqueezy Player Android app.</desc>
       <desc lang="RU">Плагин-компаньон для Android-приложения EasySqueezy Player.</desc>
@@ -12,8 +12,8 @@
       <email>irage@irage.org</email>
       <category>tools</category>
       <link>https://github.com/iragetjk/easysqueezy-lms-plugin</link>
-      <url>https://github.com/iragetjk/easysqueezy-lms-plugin/releases/download/v0.14.6/EasySqueezy-0.14.6.zip</url>
-      <sha>8724a7b1b8cf9fcc4cf4fc9a6d6ff5ac8b2acba3</sha>
+      <url>https://github.com/iragetjk/easysqueezy-lms-plugin/releases/download/v0.14.7/EasySqueezy-0.14.7.zip</url>
+      <sha>262fc24214474075f381e6ccf7d59fb6ac609797</sha>
     </plugin>
   </plugins>
 </extensions>

@@ -46,6 +46,8 @@ package Plugins::EasySqueezy::Plugin;
 #       running, its node and the networks it's a member of with this server's addresses.
 # 0.14.1: the settings page shows each phone's lossless format (and PCM while C-3PO is on).
 # 0.14.2: licensed under GPL-2.0; published on GitHub (iragetjk/easysqueezy-lms-plugin).
+# 0.14.7: Tailscale logs in on piCorePlayer: tailscaled starts with its real user set to Lyrion's
+#       effective one (there Lyrion keeps root as its real user, and the login was refused).
 # 0.14.6: "why playback stopped" says nothing when the player is playing again a second after
 #       the stop (loading a playlist or album stops it first): it was reported as songs left.
 # 0.14.5: MP3 counts as possible only with a rule that can follow a bitrate limit (B): the DSD
